@@ -1,0 +1,25 @@
+.login-card {
+  margin: auto;
+  max-width: 500px;
+}
+
+#button-card {
+  margin: auto;
+  max-width: 550px;
+  background: transparent !important;
+}
+
+#social-login-btn {
+  background-color: white;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: black;
+  padding: 0px;
+}
+
+
+#custom-text {
+  padding: 0px 5px;
+  font-size: 30px;
+}

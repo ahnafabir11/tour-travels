@@ -1,0 +1,12 @@
+.web-logo {
+  padding: 20px 0px;
+  max-width: 400px;
+}
+
+#logout-btn {
+  color: #fd8350;
+  margin: 0 5px;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 2.5rem;
+}

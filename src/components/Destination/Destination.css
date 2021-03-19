@@ -1,0 +1,10 @@
+.destination-form {
+  background-color: rgb(243, 243, 243);
+  padding: 20px;
+  border-radius: 10px;
+  margin: auto;
+}
+
+.map-container {
+  height: 550px;
+}

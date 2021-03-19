@@ -1,0 +1,11 @@
+.VehicleCard {
+  margin: auto;
+  cursor: pointer;
+}
+
+.vehicle-card {
+  margin: 10px;
+  width: 250px;
+  align-items: center;
+  padding-top: 20px
+}
