@@ -5,6 +5,14 @@
   margin: auto;
 }
 
+.destination-info {
+  background-color: #fd8350;
+  padding: 5px; 
+  border-radius: 5px;
+  color: white;
+  margin-bottom: 10px;
+}
+
 .map-container {
   height: 550px;
 }

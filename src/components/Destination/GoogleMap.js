@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 
+
 export class MapContainer extends Component {
   state = {
     showingInfoWindow: false,
@@ -21,9 +22,7 @@ export class MapContainer extends Component {
           lng: this.state.mapCenter.lng
         }}
       >
-        <Marker>
-
-        </Marker>
+        <Marker></Marker>
       </Map>
     );
   }

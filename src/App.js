@@ -10,10 +10,11 @@ import Home from './components/Home/Home';
 import Destination from './components/Destination/Destination';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import NotFound from './components/NotFound/NotFound';
 
 export const UserContext = createContext();
 
-function App() {
+const App = ()=> {
   const [userInfo, setUserInfo] = useState({});
 
   return (
@@ -28,8 +29,14 @@ function App() {
             <PrivateRoute path="/destination/:vehicleName">
               <Destination/>
             </PrivateRoute>
+            <PrivateRoute path="/destination">
+              <h1 className="text-center text-white py-5">Select One Vehicle From Home Page</h1>
+            </PrivateRoute>
             <Route path="/login">
               <Login/>
+            </Route>
+            <Route path="*">
+              <NotFound />
             </Route>
           </Switch>
         </Router>

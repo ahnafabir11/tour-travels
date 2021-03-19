@@ -1,6 +1,17 @@
 .web-logo {
-  padding: 20px 0px;
+  padding: 10px 0px;
   max-width: 400px;
+}
+
+.custom-nav-link {
+  color: white;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.custom-nav-link:hover {
+  color: #fd8350;
+  text-decoration: none;
 }
 
 #logout-btn {
@@ -8,5 +19,5 @@
   margin: 0 5px;
   cursor: pointer;
   font-weight: bold;
-  line-height: 2.5rem;
+  line-height: 1.6rem;
 }

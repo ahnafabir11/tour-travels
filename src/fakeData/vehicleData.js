@@ -1,6 +1,6 @@
 import bikeImg from '../images/bikeimg.png';
 import carImg from '../images/carimg.png';
-import busImg from '../images/busimg.png';
+import planeImg from '../images/planeimg.png';
 import trainImg from '../images/trainimg.png';
 
 const vehicleData = [
@@ -23,12 +23,12 @@ const vehicleData = [
     ]
   },
   {
-    title: 'Bus',
-    imgUrl: busImg,
+    title: 'Plane',
+    imgUrl: planeImg,
     riders: [
-      { away: '1 km', price: 15, availableSeat: 5 },
-      { away: '1.6 km', price: 12, availableSeat: 9 },
-      { away: '1.8 km', price: 9, availableSeat: 7 },
+      { away: '3 km', price: 95, availableSeat: 32 },
+      { away: '5 km', price: 85, availableSeat: 21 },
+      { away: '9 km', price: 80, availableSeat: 17 },
     ]
   },
   {

@@ -1,5 +1,25 @@
+.custom-title-text {
+  color: white;
+  font-weight: lighter;
+  font-size: 100px;
+  text-align: center;
+}
+
 .card-container {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
+}
+
+@media (max-width: 764px) {
+  .custom-title-text {
+    font-size: 80px;
+  }
+}
+
+@media (max-width: 500px) {
+  .custom-title-text {
+    padding: 20px 0;
+    font-size: 60px;
+  }
 }

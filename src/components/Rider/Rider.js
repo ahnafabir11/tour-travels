@@ -1,13 +1,12 @@
-import './Rider.css';
 import React from 'react';
 import { RiPinDistanceFill } from "react-icons/ri";
 import { HiCurrencyDollar } from "react-icons/hi";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
 
-function Rider({ vehicle, rider}) {
+const Rider = ({ vehicle, rider})=> {
   const { away, price, availableSeat} = rider;
   return (
-    <div className="Rider">
+    <div className="Rider mb-1">
       <div className="card card-body w-100 mx-0">
         <div className="row align-items-center justify-content-between px-2">
           <img src={vehicle} alt="" className="w-25" />

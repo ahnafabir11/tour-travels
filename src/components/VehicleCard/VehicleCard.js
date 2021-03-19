@@ -1,7 +1,7 @@
 import './VehicleCard.css';
 import React from 'react';
 
-function VehicleCard({ title, imgUrl, selectVehicle}) {
+const VehicleCard = ({ title, imgUrl, selectVehicle})=> {
   return (
     <div className="VehicleCard" onClick={() => selectVehicle(title)}>
       <div className="card vehicle-card">

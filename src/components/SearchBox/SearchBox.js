@@ -3,7 +3,7 @@ import { Button, TextField } from '@material-ui/core';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-function SearchBox({ handleDestination, selectedDate, handleDateChange, handleSearch }) {
+const SearchBox = ({ handleDestination, selectedDate, handleDateChange, handleSearch })=> {
   return (
     <div>
       <TextField

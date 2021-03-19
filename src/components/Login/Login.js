@@ -1,13 +1,13 @@
 import './Login.css';
 import React, { useContext, useState } from 'react';
-import firebase from "firebase/app";
-import "firebase/auth";
-import firebaseConfig from '../../firebase.config.js';
+import { useHistory, useLocation } from 'react-router';
+import { TextField, Button } from '@material-ui/core';
 import { FcGoogle } from "react-icons/fc";
 import { VscGithubInverted } from "react-icons/vsc";
-import { TextField, Button } from '@material-ui/core';
-import {UserContext} from '../../App';
-import { useHistory, useLocation } from 'react-router';
+import { UserContext } from '../../App';
+import "firebase/auth";
+import firebase from "firebase/app";
+import firebaseConfig from '../../firebase.config.js';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -15,14 +15,14 @@ if (!firebase.apps.length) {
   firebase.app();
 }
 
-function Login() {
+const Login = ()=> {
   const [, setUserInfo] = useContext(UserContext);
-  const [isNewAccount, setIsNewAccount] = useState(true);
+  const [isNewAccount, setIsNewAccount] = useState(false);
+  const [isFieldValid, setIsFieldValid] = useState(false);
   const [user, setUser] = useState({
     email: '',
     password: '',
     fullname: '',
-    photoURL: '',
     errorMessage: '',
   })
 
@@ -36,47 +36,56 @@ function Login() {
   }
 
   // add date from input to user state
-  const handleFormField = (e) => {
+  const handleFormField = (e)=> {
     const newUser = { ...user };
     newUser[e.target.name] = e.target.value;
     setUser(newUser);
+
+    if(e.target.name === 'fullname'){
+      setIsFieldValid(e.target.value > 5);
+    }
+    if (e.target.name === 'email') {
+      const re = /\S+@\S+\.\S+/;
+      setIsFieldValid(re.test(e.target.value));
+    }
+    if (e.target.name === 'password') {
+      const re = /[a-z]\d|\d[a-z]/i;
+      setIsFieldValid(re.test(e.target.value));
+    }
   }
 
   // sign up with email and password
   const handleSignUp = () => {
-    const isEmailValid = /\S+@\S+\.\S+/.test(user.email);
-    const isPassValid = user.password?.length > 7;
-    const isNameValid = user.fullname?.length > 7;
-
-    if (isEmailValid && isPassValid && isNameValid) {
+    if (isFieldValid) {
       firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-        .then((res) => {
-          const newUser = { ...user };
-          newUser.errorMessage = '';
-          // update displayName
-          const currentUser = firebase.auth().currentUser;
-          currentUser.updateProfile({ displayName: user.fullname })
-            .catch(function (error) {
-              const newUser = { ...user };
-              newUser.errorMessage = error.message;
-              setUser(newUser);
-            });
-          setUser(newUser);
-          setUserInfo(user);
-          history.replace(from);
-        })
-        .catch((error) => {
-          const errorMessage = error.message;
-          const newUser = { ...user };
-          newUser.email = '';
-          newUser.errorMessage = errorMessage;
-          setUser(newUser);
-        });
+      .then((res) => {
+        const newUser = { ...user };
+        setUser(newUser);
+        setUserInfo(user);
+        updateDisplayName();
+        history.replace(from);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        const newUser = { ...user };
+        newUser.errorMessage = errorMessage;
+        setUser(newUser);
+      });
     } else {
       const newUser = { ...user };
-      newUser.errorMessage = 'your email, fullname, password in not in correct formate !';
+      newUser.errorMessage = 'email or fullname or password is not in correct formate !';
       setUser(newUser);
     }
+  }
+
+  const updateDisplayName = ()=> {
+    const currentUser = firebase.auth().currentUser;
+    currentUser.updateProfile({ displayName: user.fullname })
+      .catch(function (error) {
+        const newUser = { ...user };
+        newUser.errorMessage = error.message;
+        setUser(newUser);
+      });
   }
 
   // sign in with email and password
@@ -85,9 +94,8 @@ function Login() {
       .then((res) => {
         const userResult = res.user;
         const newUser = { ...user };
-        newUser.fullname = userResult.displayName;
-        newUser.email = userResult.email;
-        newUser.photoURL = userResult.photoURL;
+        newUser['fullname'] = userResult.displayName;
+        newUser['email'] = userResult.email;
         setUser(newUser);
         setUserInfo(newUser);
         history.replace(from);
@@ -95,10 +103,8 @@ function Login() {
       .catch((error) => {
         const errorMessage = error.message;
         const newUser = { ...user };
-        newUser.email = '';
-        newUser.errorMessage = errorMessage;
+        newUser['errorMessage'] = errorMessage;
         setUser(newUser);
-        setUserInfo(newUser);
       });
   }
 
@@ -106,49 +112,44 @@ function Login() {
   const handleGoogleSignIn = () => {
     const googleProvider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(googleProvider)
-      .then((res) => {
-        const providedData = res.user;
-        const newUser = { ...user };
-        newUser['fullname'] = providedData.displayName;
-        newUser['email'] = providedData.email;
-        newUser['photoURL'] = providedData.photoURL;
-        newUser['errorMessage'] = '';
-        setUser(newUser);
-        setUserInfo(newUser);
-        history.replace(from);
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        const newUser = { ...user };
-        newUser.email = '';
-        newUser.errorMessage = errorMessage;
-        setUser(newUser);
-        setUserInfo(newUser);
-      });
+    .then((res) => {
+      const providedData = res.user;
+      const newUser = { ...user };
+      newUser['fullname'] = providedData.displayName;
+      newUser['email'] = providedData.email;
+      newUser['photoURL'] = providedData.photoURL;
+      newUser['errorMessage'] = '';
+      setUser(newUser);
+      setUserInfo(newUser);
+      history.push(from);
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      const newUser = { ...user };
+      newUser['errorMessage'] = errorMessage;
+      setUser(newUser);
+    });
   }
 
   // sign in with github
-  const signInWithGitHub = () => {
+  const handleGithubSignIn = () => {
     const githubProvider = new firebase.auth.GithubAuthProvider();
     firebase.auth().signInWithPopup(githubProvider)
-      .then((result) => {
-        const userResult = result.user;
-        const newUser = { ...user };
-        newUser['fullname'] = userResult.displayName;
-        newUser['email'] = userResult.email;
-        newUser['photoURL'] = userResult.photoURL;
-        newUser['errorMessage'] = '';
-        setUser(newUser);
-        setUserInfo(newUser);
-        history.replace(from);
-      }).catch((error) => {
-        const errorMessage = error.message;
-        const newUser = { ...user };
-        newUser.email = '';
-        newUser.errorMessage = errorMessage;
-        setUser(newUser);
-        setUserInfo(newUser);
-      });
+    .then((result) => {
+      const userResult = result.user;
+      const newUser = { ...user };
+      newUser['fullname'] = userResult.displayName;
+      newUser['email'] = userResult.email;
+      newUser['errorMessage'] = '';
+      setUser(newUser);
+      setUserInfo(newUser);
+      history.replace(from);
+    }).catch((error) => {
+      const errorMessage = error.message;
+      const newUser = { ...user };
+      newUser['errorMessage'] = errorMessage;
+      setUser(newUser);
+    });
   }
   
   return (
@@ -160,24 +161,30 @@ function Login() {
         <div className="card card-body login-card">
           {isNewAccount &&
             <TextField
-              className="sign-inUp-input my-3"
+              className="sign-inUp-input my-1"
               label="Full Name"
               variant="outlined"
               name="fullname"
+              helperText="name should atleast 5 character"
+              required
               onChange={handleFormField}
             />}
           <TextField
-            className="sign-inUp-input my-3"
+            className="sign-inUp-input my-1"
             label="Email"
             variant="outlined"
             name="email"
+            helperText="email must be valid"
+            required
             onChange={handleFormField}
           />
           <TextField
-            className="sign-inUp-input my-3"
+            className="sign-inUp-input my-1"
             label="Password"
             variant="outlined"
             name="password"
+            helperText="password should have 1 letter and 1 number and atleast 6 character"
+            required
             onChange={handleFormField}
           />
           {isNewAccount ?
@@ -211,7 +218,7 @@ function Login() {
             size="large" 
             color="primary" 
             id="social-login-btn"
-            onClick={signInWithGitHub}>
+            onClick={handleGithubSignIn}>
             <span id="custom-text"><VscGithubInverted /></span>GitHub
           </Button>
         </div>
