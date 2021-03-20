@@ -31,7 +31,7 @@ const Login = ()=> {
   const { from } = location.state || { from: { pathname: "/" } };
 
   // toggle sign up and sign in
-  const handleCreateAccountSate = ()=> {
+  const handleCreateAccount = ()=> {
     setIsNewAccount(!isNewAccount);
   }
 
@@ -193,7 +193,7 @@ const Login = ()=> {
           }
         <p className="text-center">
           {isNewAccount ? "already have an account?" : "don't have an account?"}
-          <Button onClick={handleCreateAccountSate}>
+          <Button onClick={handleCreateAccount}>
             {isNewAccount ? "LOG IN" : "SIGN UP"}
           </Button>
         </p>
