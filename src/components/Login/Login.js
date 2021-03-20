@@ -17,7 +17,9 @@ if (!firebase.apps.length) {
 
 const Login = ()=> {
   const [, setUserInfo] = useContext(UserContext);
-  const [isNewAccount, setIsNewAccount] = useState(false);
+  const [isNewAccount, setIsNewAccount] = useState(true);
+  const [userPass, setUserPass] = useState('');
+  const [userConfirmPass, setUserConfirmPass] = useState('');
   const [isFieldValid, setIsFieldValid] = useState(false);
   const [user, setUser] = useState({
     email: '',
@@ -37,13 +39,6 @@ const Login = ()=> {
 
   // add date from input to user state
   const handleFormField = (e)=> {
-    const newUser = { ...user };
-    newUser[e.target.name] = e.target.value;
-    setUser(newUser);
-
-    if(e.target.name === 'fullname'){
-      setIsFieldValid(e.target.value > 5);
-    }
     if (e.target.name === 'email') {
       const re = /\S+@\S+\.\S+/;
       setIsFieldValid(re.test(e.target.value));
@@ -51,31 +46,44 @@ const Login = ()=> {
     if (e.target.name === 'password') {
       const re = /[a-z]\d|\d[a-z]/i;
       setIsFieldValid(re.test(e.target.value));
+      setUserPass(e.target.value);
     }
+    if (e.target.name === 'confirmPass'){
+      setUserConfirmPass(e.target.value);
+    } 
+    const newUser = { ...user };
+    newUser[e.target.name] = e.target.value;
+    setUser(newUser);
   }
-
+  
   // sign up with email and password
   const handleSignUp = () => {
-    if (isFieldValid) {
-      firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-      .then((res) => {
+    if (userConfirmPass === userPass) {
+      if (isFieldValid) {
+        firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+          .then((res) => {
+            const newUser = { ...user };
+            setUser(newUser);
+            setUserInfo(user);
+            updateDisplayName();
+            history.replace(from);
+          })
+          .catch((error) => {
+            const errorMessage = error.message;
+            const newUser = { ...user };
+            newUser.errorMessage = errorMessage;
+            setUser(newUser);
+          });
+      } else {
         const newUser = { ...user };
+        newUser.errorMessage = 'all feilds are not in correct formate!';
         setUser(newUser);
-        setUserInfo(user);
-        updateDisplayName();
-        history.replace(from);
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        const newUser = { ...user };
-        newUser.errorMessage = errorMessage;
-        setUser(newUser);
-      });
+      }
     } else {
       const newUser = { ...user };
-      newUser.errorMessage = 'email or fullname or password is not in correct formate !';
+      newUser.errorMessage = 'Password Not Match';
       setUser(newUser);
-    }
+    }    
   }
 
   const updateDisplayName = ()=> {
@@ -165,7 +173,7 @@ const Login = ()=> {
               label="Full Name"
               variant="outlined"
               name="fullname"
-              helperText="name should atleast 5 character"
+              helperText="put your real name"
               required
               onChange={handleFormField}
             />}
@@ -187,8 +195,18 @@ const Login = ()=> {
             required
             onChange={handleFormField}
           />
+          {isNewAccount &&
+            <TextField
+              className="sign-inUp-input my-1"
+              label="Confirm Password"
+              variant="outlined"
+              name="confirmPass"
+              helperText="rewrite your password"
+              required
+              onChange={handleFormField}
+            />}
           {isNewAccount ?
-            <Button variant="contained" size="large" color="primary" className="my-3" onClick={handleSignUp}>SIGN UP</Button> :              
+            <Button variant="contained" size="large" color="primary" className="my-3" onClick={ handleSignUp}>SIGN UP</Button> :              
             <Button variant="contained" size="large" color="primary" className="my-3" onClick={signInWithEmail}>SIGN IN</Button>
           }
         <p className="text-center">
