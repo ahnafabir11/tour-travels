@@ -191,6 +191,7 @@ const Login = ()=> {
             label="Password"
             variant="outlined"
             name="password"
+            type="password"
             helperText="password should have 1 letter and 1 number and atleast 6 character"
             required
             onChange={handleFormField}
@@ -201,6 +202,7 @@ const Login = ()=> {
               label="Confirm Password"
               variant="outlined"
               name="confirmPass"
+              type="password"
               helperText="rewrite your password"
               required
               onChange={handleFormField}
